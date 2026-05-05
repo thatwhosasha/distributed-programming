@@ -13,7 +13,7 @@
 
 |Действие|Команда|
 |---------------------------------|------------------------------------------------|
-|Показать все ключи|	 `exec -it redis redis-cli KEYS "*"`|
+|Показать все ключи|	 `docker exec -it redis redis-cli KEYS "*"`|
 |Показать значение ключа (вместо keyname подставьте реальное имя)|	`docker exec -it redis redis-cli GET "keyname"`|
 |Войти в интерактивную консоль Redis|	`docker exec -it redis redis-cli` Затем внутри: `KEYS "*", GET key, exit`|
 |Очистить всю базу Redis (удалить все ключи)|	`docker exec -it redis redis-cli FLUSHALL`|
