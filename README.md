@@ -24,3 +24,12 @@ git remote add origin git@github.com:your-name/ds-2026-labs.git
 
 git push origin main
 ```
+## Для каждой новой лабы:
+```bash
+git fetch upstream              # подтянуть свежие шаблоны
+git checkout main               # уйти в main
+git checkout -b paN upstream/paN  # создать ветку из шаблона преподавателя
+# ... выполняешь задание ...
+git add .
+git commit -m "PA N: сделано"
+```
