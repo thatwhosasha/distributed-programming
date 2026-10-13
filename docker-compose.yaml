@@ -1,0 +1,44 @@
+services:
+  rabbitmq-pa3:
+    image: rabbitmq:3.13.7-management
+    container_name: rabbitmq-pa3
+    hostname: rabbitmq-pa3
+    environment:
+      - RABBITMQ_DEFAULT_USER=app
+      - RABBITMQ_DEFAULT_PASS=rabbit_secret_2025
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_pa3_data:/var/lib/rabbitmq
+
+  redis-main:
+    image: redis
+    container_name: redis-main
+    command: redis-server --requirepass redis_main_secret_2025
+    ports:
+      - "6000:6379"
+
+  redis-ru:
+    image: redis
+    container_name: redis-ru
+    command: redis-server --requirepass redis_ru_secret_2025
+    ports:
+      - "6001:6379"
+
+  redis-eu:
+    image: redis
+    container_name: redis-eu
+    command: redis-server --requirepass redis_eu_secret_2025
+    ports:
+      - "6002:6379"
+
+  redis-asia:
+    image: redis
+    container_name: redis-asia
+    command: redis-server --requirepass redis_asia_secret_2025
+    ports:
+      - "6003:6379"
+
+volumes:
+  rabbitmq_pa3_data:

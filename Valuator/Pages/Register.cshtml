@@ -1,0 +1,9 @@
+@page
+@model Valuator.Pages.RegisterModel
+<h2>Регистрация</h2>
+<form method="post">
+    <div>Логин: <input asp-for="Login" /></div>
+    <div>Пароль: <input asp-for="Password" type="password" /></div>
+    <button type="submit">Зарегистрироваться</button>
+</form>
+<p style="color:red">@Model.Error</p>
