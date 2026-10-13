@@ -2,12 +2,7 @@
 bin/
 obj/
 
-<<<<<<< HEAD
 .vscode/
 .idea/
-=======
-/.vscode/
-/.idea/
->>>>>>> pa4
 
 *.DotSettings.user
