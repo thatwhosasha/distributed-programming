@@ -1,37 +1,48 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using StackExchange.Redis;
+using Valuator.Services;
 
 namespace Valuator.Pages;
 
 public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
+    private readonly IDatabase _redis;
+    private readonly RabbitPublisher _publisher;
 
-    public IndexModel(ILogger<IndexModel> logger)
+    public IndexModel(
+        ILogger<IndexModel> logger,
+        IConnectionMultiplexer redis,
+        RabbitPublisher publisher)
     {
         _logger = logger;
+        _redis = redis.GetDatabase();
+        _publisher = publisher;
     }
 
-    public void OnGet()
+    [BindProperty(Name = "text")]
+    public string Text { get; set; } = string.Empty;
+
+    public void OnGet() { }
+
+    public async Task<IActionResult> OnPostAsync()
     {
+    if (!ModelState.IsValid) return Page();
+    if (string.IsNullOrWhiteSpace(Text)) return Page();
 
+    var id = Guid.NewGuid().ToString();
+
+    await _redis.StringSetAsync($"text:{id}", Text);
+
+    double similarity = ComputeSimilarity(Text);
+    await _redis.StringSetAsync($"similarity:{id}", similarity);
+
+    await _publisher.PublishSimilarityCalculatedAsync(id, similarity);
+
+    await _publisher.PublishAsync(id, Text);
+
+    return RedirectToPage("Summary", new { id });
     }
-
-    public IActionResult OnPost(string text)
-    {
-        _logger.LogDebug(text);
-
-        string id = Guid.NewGuid().ToString();
-
-        string textKey = "TEXT-" + id;
-        // TODO: (pa1) сохранить в БД (Redis) text по ключу textKey
-
-        string rankKey = "RANK-" + id;
-        // TODO: (pa1) посчитать rank и сохранить в БД (Redis) по ключу rankKey
-
-        string similarityKey = "SIMILARITY-" + id;
-        // TODO: (pa1) посчитать similarity и сохранить в БД (Redis) по ключу similarityKey
-
-        return Redirect($"summary?id={id}");
-    }
+    
 }
